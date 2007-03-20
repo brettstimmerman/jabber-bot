@@ -1,0 +1,45 @@
+= Jabber::Bot
+
+Easily create powerful Jabber bots to do your bidding.
+
+Jabber::Bot makes it simple to create and command your own Jabber bot with 
+little fuss. By adding custom commands powered by regular expressions to your 
+bot's repertoire, you and your new bot will be able to accomplish nearly 
+anything.
+
+Author::    Brett Stimmerman (mailto:brettstimmerman@gmail.com)
+Version::   0.1.0
+Copyright:: Copyright (c) 2007 Brett Stimmerman. All rights reserved.
+License::   New BSD License (http://opensource.org/licenses/bsd-license.php)
+Website::   http://socket7.net/software/jabber-bot
+
+== Dependencies
+
+- Ruby[http://www.ruby-lang.org] 1.8.4+
+- xmpp4r-simple[http://xmpp4r-simple.rubyforge.org/] 0.8.7+
+
+== Basic Usage
+
+  # Create a new Jabber::Bot to do your bidding
+  bot = Jabber::Bot.new('mybot@example.com', 'password', 'master@example.com')
+	
+  # Give your bot a new command, 'rand'
+  bot.add_command(
+    :command     => 'rand',
+    :description => 'Produce a random number from 0 to 10',
+    :regex       => /^rand$/
+  ) { rand(10).to_s }
+
+  # Give your bot a new command, 'puts <string>' with an alias 'p <string>'
+  bot.add_command(
+    :command     => 'puts <string>',
+    :description => 'Write something to $stdout',
+    :regex       => /^puts\s+.+$/,
+    :aliases     => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ]
+  ) do |message|
+    puts message
+    "'#{message}' written to $stdout"
+  end
+
+  # Bring your new bot to life
+  bot.connect
