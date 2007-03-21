@@ -8,7 +8,7 @@ bot's repertoire, you and your new bot will be able to accomplish nearly
 anything.
 
 Author::    Brett Stimmerman (mailto:brettstimmerman@gmail.com)
-Version::   0.1.0
+Version::   1.0.0
 Copyright:: Copyright (c) 2007 Brett Stimmerman. All rights reserved.
 License::   New BSD License (http://opensource.org/licenses/bsd-license.php)
 Website::   http://socket7.net/software/jabber-bot
@@ -31,18 +31,18 @@ Website::   http://socket7.net/software/jabber-bot
 	
   # Give your bot a private command, 'rand'
   bot.add_command(
-    :syntax     => 'rand',
+    :syntax      => 'rand',
     :description => 'Produce a random number from 0 to 10',
     :regex       => /^rand$/
   ) { rand(10).to_s }
 
   # Give your bot a public command, 'puts <string>' with an alias 'p <string>'
   bot.add_command(
-    :syntax     => 'puts <string>',
+    :syntax      => 'puts <string>',
     :description => 'Write something to $stdout',
     :regex       => /^puts\s+.+$/,
     :aliases     => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ],
-    :is_public     => true
+    :is_public   => true
   ) do |message|
     puts message
     "'#{message}' written to $stdout"
