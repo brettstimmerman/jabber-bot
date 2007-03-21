@@ -20,22 +20,29 @@ Website::   http://socket7.net/software/jabber-bot
 
 == Basic Usage
 
-  # Create a new Jabber::Bot to do your bidding
-  bot = Jabber::Bot.new('mybot@example.com', 'password', 'master@example.com')
+  # Create a public Jabber::Bot to do your bidding
+  bot_config = {
+    :jabber_id => 'bot@example.com',
+    :password  => 'password',
+    :master    => 'master@example.com',
+    :is_public => true
+  }
+  bot = Jabber::Bot.new(bot_config)
 	
-  # Give your bot a new command, 'rand'
+  # Give your bot a private command, 'rand'
   bot.add_command(
-    :command     => 'rand',
+    :syntax     => 'rand',
     :description => 'Produce a random number from 0 to 10',
     :regex       => /^rand$/
   ) { rand(10).to_s }
 
-  # Give your bot a new command, 'puts <string>' with an alias 'p <string>'
+  # Give your bot a public command, 'puts <string>' with an alias 'p <string>'
   bot.add_command(
-    :command     => 'puts <string>',
+    :syntax     => 'puts <string>',
     :description => 'Write something to $stdout',
     :regex       => /^puts\s+.+$/,
-    :aliases     => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ]
+    :aliases     => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ],
+    :is_public     => true
   ) do |message|
     puts message
     "'#{message}' written to $stdout"

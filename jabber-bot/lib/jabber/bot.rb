@@ -26,7 +26,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #++
 
-# RubyGems includes
 require 'rubygems'
 require 'xmpp4r-simple'
 
@@ -46,55 +45,101 @@ module Jabber
   #
   class Bot
     
-    # Creates a new Jabber::Bot object that will use the specified _jabber_id_
-    # and _password_ to connect to the Jabber server, and that will only respond
-    # to commands given to it by _master_id_ (presumably, you).
+    # Creates a new Jabber::Bot object with the specified _name_, _jabber_id_
+    # and _password_. If _name_ is omitted, _jabber_id_ is used.  The bot will
+    # respond to commands from one or more masters specified by _master_. 
+    # You may choose to restrict a Jabber::Bot to listen only to its master(s), 
+    # or make it a public bot that will listen to anyone.
     #
     # By default, a Jabber::Bot has only a single command, 'help', which will
     # display the full list of commands available in the bot's repertoire.
     #
-    #   bot = Jabber::Bot.new('bot@example.com', 'password', 'master@example.com')
-    def initialize(jabber_id, password, master_id)
-      @master_id = master_id
-      @jabber_id = jabber_id
-      @password  = password
+    # If you choose to make a public bot only the commands you specify as
+    # public commands, as well as the default 'help' command, will be publicly 
+    # executable.
+    #
+    #   # A private bot with a single master
+    #   bot = Jabber::Bot.new(
+    #       :name      => 'PrivateBot',
+    #       :jabber_id => 'bot@example.com', 
+    #       :password  => 'password',
+    #       :master    => 'master@example.com'
+    #   )
+    #
+    #   # A public bot with mutliple masters
+    #   masters = ['master1@example.com', 'master2@example.com]
+    #   bot = Jabber::Bot.new(
+    #       :name      => 'PublicBot',
+    #       :jabber_id => 'bot@example.com', 
+    #       :password  => 'password',
+    #       :master    => masters,
+    #       :is_public => true
+    #   )
+    #
+    def initialize(bot_config)
       
-      @command_meta = {}
-      @commands     = {}
+      if bot_config[:jabber_id].nil?
+        abort 'You must specify a :jabber_id'
+      elsif bot_config[:password].nil?
+        abort 'You must specify a :password'
+      elsif bot_config[:master].nil? or bot_config[:master].length == 0
+        abort 'You must specify at least one :master'
+      end
+      
+      @bot_config = bot_config
+      
+      @bot_config[:is_public] = false if @bot_config[:is_public].nil?
+
+      if @bot_config[:name].nil? or @bot_config[:name].length == 0
+        @bot_config[:name] = @bot_config[:jabber_id].sub(/@.+$/, '')
+      end
+      
+      unless bot_config[:master].is_a?(Array)
+        @bot_config[:master] = [bot_config[:master]]
+      end
+      
+      @commands = { :spec => [], :meta => {} }
             
       add_command(
-        :command     => 'help',
+        :syntax      => 'help',
         :description => 'Display this help message',
         :regex       => /^help$/,
-        :aliases     => [{:alias => '?', :regex => /^\?/}]
-      ) { help_message }
+        :alias       => [ :syntax => '?', :regex => /^\?/ ],
+        :is_public   => @bot_config[:is_public]
+      ) { |sender, message| help_message(sender) }
     end
     
     # Add a command to the bot's repertoire.
     #
     # Commands consist of a metadata Hash and a callback block. The metadata
-    # Hash *must* contain the command's display name (including any syntax
-    # guidelines), a description of the command, and a regular expression 
-    # describing the command's syntax.
+    # Hash *must* contain the command syntax and a description of the command 
+    # for display with the builtin 'help' command, and a regular expression to 
+    # detect the presence of the command in an incoming message.
     #
-    # The metadata Hash _may_ optionally contain an array of command aliases. An
-    # alias consists of a display name and syntax regex. Command aliases allow
-    # your bot to understand command shorthands. For example, the default 'help'
-    # command has an alias '?'; 'help' and '?' are interchangeable.
+    # The metadata Hash may optionally contain an array of command aliases. An
+    # alias consists of an alias syntax and regex. Aliases allow the bot to 
+    # understand command shorthands. For example, the default 'help' command has
+    # an alias '?'. Saying either 'help' or '?' will trigger the same command 
+    # callback block.
     #
-    # The specified callback block will be called when the bot receives a 
+    # The metadata Hash may optionally contain an is_public flag, indicating
+    # the bot should respond to *anyone* issuing the command, not just the bot
+    # master(s).  Public commands are only truly public if the bot itself has
+    # been made public.
+    #
+    # The specified callback block will be triggered when the bot receives a 
     # message that matches the given command regex (or an alias regex). The 
-    # callback block will have access to the message text (not including the 
-    # command), and should either return a String response or _nil_. If a
-    # callback block returns a String, it will be delivered to the bot's master
-    # as a response.
+    # callback block will have access to the sender and the message text (not 
+    # including the command), and should either return a String response or 
+    # _nil_. If a callback block returns a String response, the response will be
+    # delivered to the bot master that issued the command.
     # 
     # Examples:
     #
-    #   # Say "puts foo" to your bot and "foo" will be written to $stdout.
-    #   # The bot will respond with "'foo' written to $stdout."
+    #   # Say "puts foo" to the bot and "foo" will be written to $stdout.
+    #   # The bot will also respond with "'foo' written to $stdout."
     #   add_command(
-    #     :command     => 'puts <string>',
+    #     :syntax      => 'puts <string>',
     #     :description => 'Write something to $stdout',
     #     :regex       => /^puts\s+.+$/
     #   ) do |message|
@@ -102,66 +147,90 @@ module Jabber
     #     "'#{message}' written to $stdout."
     #   end
     #
-    #   # "puts!" is a non-responding version of "puts", and has two alias
-    #   # commands,  "p!" and "!"
+    #   # "puts!" is a non-responding version of "puts", and has an alias, "p!"
     #   add_command(
-    #     :command     => 'puts! <string>',
+    #     :syntax      => 'puts! <string>',
     #     :description => 'Write something to $stdout (without response)',
     #     :regex       => /^puts!\s+.+$/,
-    #     :aliases     => [
-    #       { :alias => 'p! <string>', :regex => /^p!$/ },
-    #       { :alias => '! <string>', :regex => /^!$/ }
-    #     ]
+    #     :alias       => [ :syntax => 'p! <string>', :regex => /^p!$/ ]
     #   ) do |message|
     #     puts message
     #     nil
     #   end
     #
+    #  # 'rand' is a public command that produces a random number from 0 to 10
+    #  add_command(
+    #   :syntax      => 'rand',
+    #   :description => 'Produce a random number from 0 to 10',
+    #   :regex       => /^rand$/,
+    #   :is_public   => true
+    #  ) { rand(10).to_s }
+    #
     def add_command(command, &callback)
-      command_name = command[:command]
+      syntax    = command[:syntax]
+      is_public = command[:is_public] || false
       
-      @command_meta[command_name] = {
-        :names       => [command_name],
-        :description => command[:description]
+      # Add the command meta. Using a Hash allows for Hash.sort to list
+      # commands aphabetically in the 'help' command response.
+      @commands[:meta][syntax] = {
+        :syntax      => [syntax],
+        :description => command[:description],
+        :is_public   => is_public
       }
       
-      @commands[command[:regex]] = callback
+      # Add the command spec. The command spec is used by parse_command.
+      @commands[:spec] << {
+       :regex     => command[:regex],
+       :callback  => callback,
+       :is_public => is_public
+      }
       
-      # Add any command aliases
-      unless command[:aliases].nil?
-        command[:aliases].each do |a|
-          @command_meta[command_name][:names] << a[:alias]
-          @commands[a[:regex]] = callback
+      # Add any command aliases to the command meta and spec
+      unless command[:alias].nil?
+        command[:alias].each do |a|
+          @commands[:meta][syntax][:syntax] << a[:syntax]
+          
+          @commands[:spec] << {
+            :regex     => a[:regex],
+            :callback  => callback,
+            :is_public => is_public            
+          }
         end
       end
     end
     
     # Connect the bot, making him available to accept commands.
     def connect
-      @jabber = Jabber::Simple.new(@jabber_id, @password)
-
-      for sig in [:SIGINT, :SIGTERM]
-        trap(sig) { abort 'Ook. Jabber::Bot interrupted.' }
-      end
+      @jabber = Jabber::Simple.new(@bot_config[:jabber_id], 
+          @bot_config[:password])
       
-      deliver('What is your bidding, master?')
+      deliver(@bot_config[:master], "#{@bot_config[:name]} reporting for duty.")
       
       start_listener_thread      
     end
     
-    # Deliver a message to the bot's master
-    def deliver(message)
-      @jabber.deliver(@master_id, message)
+    # Deliver a message to the specified recipient(s).  Accepts a single 
+    # recipient or an Array of recipients.
+    def deliver(to, message)
+      if to.is_a?(Array)
+        to.each { |t| @jabber.deliver(t, message) }
+      else
+        @jabber.deliver(to, message)
+      end
     end
     
     # Returns the default help message describing the bot's command repertoire.
     # Commands are sorted alphabetically by name.
-    def help_message #:nodoc:
+    def help_message(sender) #:nodoc:
       help_message = "I understand the following commands:\n\n"
-            
-      @command_meta.sort.each do |command|
-        command[1][:names].each { |name| help_message += "#{name}\n" }
-        help_message += "  #{command[1][:description]}\n\n"
+      
+      is_master = @bot_config[:master].include?(sender)
+      
+      @commands[:meta].sort.each do |command|
+        if command[1][:is_public] == true || is_master
+          command[1][:syntax].each { |syntax| help_message += "#{syntax}\n" }
+          help_message += "  #{command[1][:description]}\n\n"
+        end
       end
       
       return help_message
@@ -173,30 +242,49 @@ module Jabber
       return @jabber
     end
     
-    # Parses the given string for the presence of a known command by testing the
-    # string against each known command's regex. If a known command is found
-    # the string is passed on to the callback block, minus the command itself.
-    # If a String result is is present it is delivered to the bot's master.
-    def parse_command(message_str) #:nodoc:
-      @commands.each do |regex, callback|
-        unless (message_str.strip =~ regex).nil?
-          response = callback.call(message_str.sub(/\w+\s+/, ''))
-         
-          deliver(response) unless response.nil?
-          return
-        end
-      end
+    # Access the bot master jabber id(s), as an Array
+    def master
+      return @bot_config[:master]
+    end
+    
+    # Parses the given command message for the presence of a known command by 
+    # testing it against each known command's regex. If a known command is
+    # found, the command parameters are passed on to the callback block, minus 
+    # the command trigger. If a String result is present it is delivered to the
+    # sender.
+    #
+    # If the bot has not been made public, commands from anyone other than the
+    # bot master(s) will be silently ignored.
+    def parse_command(sender, message) #:nodoc:
+      puts sender + " " + message
+      is_master = @bot_config[:master].include?(sender)
+      
+      if @bot_config[:is_public] or is_master
         
-      response = "I don't understand '#{message_str.strip}.' Try saying " +
-        "'help' to see what commands I understand"
-      deliver(response)
+        @commands[:spec].each do |command|
+          if command[:is_public] or is_master
+            unless (message.strip =~ command[:regex]).nil?
+              response = command[:callback].call(sender,
+                  message.sub(/.+\s+/, ''))
+         
+              deliver(sender, response) unless response.nil?
+              return
+            end
+          end
+        end
+        
+        response = "I don't understand '#{message.strip}.' Try saying 'help' " +
+            "to see what commands I understand"
+        deliver(sender, response)        
+        
+      end
     end
     
     # Disconnect the bot.  Once the bot has been disconnected, there is no way
     # to restart it by issuing a command.
     def disconnect
       if @jabber.connected?
-        deliver('Disconnecting...')
+        deliver(@bot_config[:master], "#{@bot_config[:name]} disconnecting...")
         @jabber.disconnect
       end
     end
@@ -204,8 +292,8 @@ module Jabber
     # Creates a new Thread dedicated to listening for incoming chat messages.
     # When a chat message is received, the bot checks if the sender is its 
     # master.  If so, it is tested for the presence commands, and processed 
-    # accordingly. Messages sent by anyone other than the bot's master are 
-    # silently ignored.
+    # accordingly. If the bot itself or the command issued is not made public,
+    # a message sent by anyone other than the bot's master is silently ignored.
     #
     # Only the chat message type is supported.  Other message types such as 
     # error and groupchat are not supported.
@@ -216,9 +304,9 @@ module Jabber
               # Remove the Jabber resourse, if any
               sender = message.from.to_s.sub(/\/.+$/, '')
               
-              if sender == @master_id and message.type == :chat 
+              if message.type == :chat 
                 parse_thread = Thread.new do 
-                  parse_command(message.body)
+                  parse_command(sender, message.body)
                 end
                 
                 parse_thread.join
