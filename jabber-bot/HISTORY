@@ -1,0 +1,9 @@
+Jabber::Bot Release History
+
+Version 1.0.1 (21 March 2007)
+  * Fix debug puts remnant in parse_command.
+  * Fix message.sub regex during command callback in parse_command.
+  * Fix default '?' alias command regex.
+
+Version 1.0.0 (20 March 2007)
+  * Initial release.
