@@ -38,7 +38,7 @@ module Jabber
   # repertoire, you and your new bot will be able to accomplish nearly anything.
   #
   # Author::    Brett Stimmerman (mailto:brettstimmerman@gmail.com)
-  # Version::   0.1.0
+  # Version::   1.0.1
   # Copyright:: Copyright (c) 2007 Brett Stimmerman. All rights reserved.
   # License::   New BSD License (http://opensource.org/licenses/bsd-license.php)
   # Website::   http://socket7.net/software/jabber-bot
@@ -104,7 +104,7 @@ module Jabber
         :syntax      => 'help',
         :description => 'Display this help message',
         :regex       => /^help$/,
-        :alias       => [ :syntax => '?', :regex => /^\?/ ],
+        :alias       => [ :syntax => '?', :regex => /^\?$/ ],
         :is_public   => @bot_config[:is_public]
       ) { |sender, message| help_message(sender) }
     end
@@ -264,7 +264,7 @@ module Jabber
           if command[:is_public] or is_master
             unless (message.strip =~ command[:regex]).nil?
               response = command[:callback].call(sender,
-                  message.sub(/.+\s+/, ''))
+                  message.sub(/^.+\s+/, ''))
          
               deliver(sender, response) unless response.nil?
               return
@@ -273,7 +273,7 @@ module Jabber
         end
         
         response = "I don't understand '#{message.strip}.' Try saying 'help' " +
-            "to see what commands I understand"
+            "to see what commands I understand."
         deliver(sender, response)        
         
       end
