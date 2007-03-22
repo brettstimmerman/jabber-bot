@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 #--
 # Copyright (c) 2007 Brett Stimmerman <brettstimmerman@gmail.com>
 # All rights reserved.
@@ -26,7 +28,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #++
 
-#!/usr/bin/env ruby
 require 'rubygems'
 require 'jabber/bot'
 
