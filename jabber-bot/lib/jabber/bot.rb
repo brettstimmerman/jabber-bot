@@ -264,7 +264,7 @@ module Jabber
           if command[:is_public] or is_master
             unless (message.strip =~ command[:regex]).nil?
               response = command[:callback].call(sender,
-                  message.sub(/^.+\s+/, ''))
+                  message.sub(/^.[^\s]+\s+/, ''))
          
               deliver(sender, response) unless response.nil?
               return
