@@ -35,7 +35,7 @@ require 'rake/rdoctask'
 
 spec = Gem::Specification.new do |s|
   s.name     = 'jabber-bot'
-  s.version  = '0.1.0'
+  s.version  = '1.0.1'
   s.author   = 'Brett Stimmerman'
   s.email    = 'brettstimmerman@gmail.com'
   s.homepage = 'http://socket7.net/software/jabber-bot'
@@ -47,13 +47,15 @@ spec = Gem::Specification.new do |s|
   
   s.rubyforge_project = 'jabber-bot'
   
-  s.files        = FileList['lib/**/*', 'LICENSE', 'README'].exclude('rdoc').to_a
+  s.files        = FileList['lib/**/*', 'LICENSE', 'README', 
+        'HISTORY'].exclude('rdoc').to_a
+
   s.require_path = 'lib'
   
   s.has_rdoc = true
-  s.extra_rdoc_files = ['README', 'LICENSE']
+  s.extra_rdoc_files = ['README', 'LICENSE', 'HISTORY']
   s.rdoc_options << '--title' << 'Jabber::Bot Documentation' <<
-                    '--main' <<'README' <<
+                    '--main' << 'README' <<
                     '--line-numbers'
   
   s.required_ruby_version = '>=1.8.4'
