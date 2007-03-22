@@ -256,7 +256,6 @@ module Jabber
     # If the bot has not been made public, commands from anyone other than the
     # bot master(s) will be silently ignored.
     def parse_command(sender, message) #:nodoc:
-      puts sender + " " + message
       is_master = @bot_config[:master].include?(sender)
       
       if @bot_config[:is_public] or is_master
