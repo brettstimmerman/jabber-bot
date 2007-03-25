@@ -122,8 +122,8 @@ module Jabber
     # the builtin 'help' command, and a regular expression (+regex+) to detect
     # the presence of the command in an incoming message.
     #
-    # The metadata Hash may optionally contain an array of command alias Hashes.
-    # An alias consists of an alias +syntax+ and +regex+. Aliases allow the bot
+    # The metadata Hash may optionally contain an array of command aliases. An
+    # +alias+ consists of an alias +syntax+ and +regex+. Aliases allow the bot
     # to understand command shorthands. For example, the default 'help' command
     # has an alias '?'. Saying either 'help' or '?' will trigger the same
     # command callback block.
