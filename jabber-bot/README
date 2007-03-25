@@ -2,13 +2,13 @@
 
 Easily create powerful Jabber bots to do your bidding.
 
-Jabber::Bot makes it simple to create and command your own Jabber bot with 
-little fuss. By adding custom commands powered by regular expressions to your 
-bot's repertoire, you and your new bot will be able to accomplish nearly 
+Jabber::Bot makes it simple to create and command your own Jabber bot with
+little fuss. By adding custom commands powered by regular expressions to your
+bot's repertoire, you and your new bot will be able to accomplish nearly
 anything.
 
 Author::    Brett Stimmerman (mailto:brettstimmerman@gmail.com)
-Version::   1.0.1
+Version::   1.1.0
 Copyright:: Copyright (c) 2007 Brett Stimmerman. All rights reserved.
 License::   New BSD License (http://opensource.org/licenses/bsd-license.php)
 Website::   http://socket7.net/software/jabber-bot
@@ -21,14 +21,16 @@ Website::   http://socket7.net/software/jabber-bot
 == Basic Usage
 
   # Create a public Jabber::Bot to do your bidding
-  bot_config = {
+  config = {
+    :name      => 'SampleBot'
     :jabber_id => 'bot@example.com',
     :password  => 'password',
     :master    => 'master@example.com',
     :is_public => true
   }
-  bot = Jabber::Bot.new(bot_config)
-	
+
+  bot = Jabber::Bot.new(config)
+
   # Give your bot a private command, 'rand'
   bot.add_command(
     :syntax      => 'rand',
@@ -41,10 +43,10 @@ Website::   http://socket7.net/software/jabber-bot
     :syntax      => 'puts <string>',
     :description => 'Write something to $stdout',
     :regex       => /^puts\s+.+$/,
-    :aliases     => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ],
+    :alias       => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ],
     :is_public   => true
-  ) do |message|
-    puts message
+  ) do |sender, message|
+    puts "#{sender} says '#{message'"
     "'#{message}' written to $stdout"
   end
 

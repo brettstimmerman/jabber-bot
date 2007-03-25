@@ -32,15 +32,19 @@ require 'rubygems'
 require 'jabber/bot'
 
 # Configure a public bot
-bot_config = {
+config = {
+  :name      =? 'PublicBot',
   :jabber_id => 'bot@example.com',
   :password  => 'password',
   :master    => 'master@example.com',
-  :is_public => true
+  :is_public => true,
+  :status    => 'Hello, I am PublicBot.',
+  :presence  => :chat,
+  :priority  => 10
 }
 
 # Create a new bot
-bot = Jabber::Bot.new(bot_config)
+bot = Jabber::Bot.new(config)
 
 # Give the bot a private command, 'puts', with a response message
 bot.add_command(
@@ -48,7 +52,7 @@ bot.add_command(
   :description => 'Write something to $stdout',
   :regex       => /^puts\s+.+$/
 ) do |sender, message|
-  puts message
+  puts "#{sender} says '#{message}'"
   "'#{message}' written to $stdout"
 end
 
@@ -68,7 +72,7 @@ bot.add_command(
   :description => 'Produce a random number from 0 to 10',
   :regex       => /^rand$/,
   :alias       => [:syntax => 'r', :regex => /^r$/],
-  :is_public      => true
+  :is_public   => true
 ) { rand(10).to_s }
 
 # Unleash the bot
