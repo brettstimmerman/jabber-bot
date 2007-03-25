@@ -222,6 +222,11 @@ module Jabber
       end
     end
 
+    # Returns an Array of masters
+    def master
+      @config[:master]
+    end
+
     # Returns +true+ if the given Jabber id is a master, +false+ otherwise.
     def master?(jabber_id)
       @config[:master].include? jabber_id
