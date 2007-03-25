@@ -3,8 +3,8 @@ Jabber::Bot Release History
 Version 1.1.0 (24 March 2007)
   * Supports Jabber presence, status message and priority.
   * Built-in 'help' command now accepts an optional <command> argument.
+  * New master?(jabber_id) method.
   * jabber method now a read-only attribute.
-  * master method changed to master?(jabber_id).
   * More command parsing regex cleanup.
   * RDoc cleanup.
 
