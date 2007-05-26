@@ -309,12 +309,10 @@ module Jabber
     # Extract the command name from the given syntax
     def command_name(syntax) #:nodoc:
       if syntax.include? ' '
-        name = syntax.sub(/^(\S+).*/, '\1')
+        syntax.sub(/^(\S+).*/, '\1')
       else
-        name = syntax
+        syntax
       end
-
-      name
     end
 
     # Returns the default help message describing the bot's command repertoire.
@@ -374,6 +372,7 @@ module Jabber
 
               response = command[:callback].call(sender, params)
               deliver(sender, response) unless response.nil?
+              
               return
             end
           end
@@ -396,6 +395,7 @@ module Jabber
     def start_listener_thread #:nodoc:
       listener_thread = Thread.new do
         loop do
+          if @jabber.received_messages?
             @jabber.received_messages do |message|
               # Remove the Jabber resourse, if any
               sender = message.from.to_s.sub(/\/.+$/, '')
@@ -408,6 +408,7 @@ module Jabber
                 parse_thread.join
               end
             end
+          end
 
           sleep 1
         end
