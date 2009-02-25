@@ -12,8 +12,12 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'jabber-bot'
 
-  s.files = FileList['lib/**/*', 'LICENSE', 'README',
-      'HISTORY'].exclude('rdoc').to_a
+  s.files = [
+    'HISTORY',
+    'LICENSE',
+    'README',
+    'lib/jabber/bot.rb'
+  ]
 
   s.require_path = 'lib'
 
