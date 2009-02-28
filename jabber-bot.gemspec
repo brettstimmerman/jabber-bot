@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.files = [
     'HISTORY',
     'LICENSE',
-    'README',
+    'README.rdoc',
     'lib/jabber/bot.rb'
   ]
 
