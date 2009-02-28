@@ -1,14 +1,11 @@
 Gem::Specification.new do |s|
   s.name     = 'jabber-bot'
-  s.version  = '1.1.0'
+  s.version  = '1.1.1'
   s.author   = 'Brett Stimmerman'
   s.email    = 'brettstimmerman@gmail.com'
-  s.homepage = 'http://socket7.net/software/jabber-bot'
+  s.homepage = 'http://github/brettstimmerman/jabber-bot'
   s.platform = Gem::Platform::RUBY
-  s.summary  = "Jabber::Bot makes it simple to create and command your own " +
-               "Jabber bot with little fuss. By adding custom commands " +
-               "powered by regular expressions to your bot's repertoire, you " +
-               "and your new bot will be able to accomplish nearly anything."
+  s.summary  = 'Easily create simple regex powered Jabber bots.'
 
   s.rubyforge_project = 'jabber-bot'
 
@@ -22,9 +19,9 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
 
   s.has_rdoc = true
-  s.extra_rdoc_files = ['README', 'LICENSE', 'HISTORY']
+  s.extra_rdoc_files = ['README.rdoc', 'LICENSE', 'HISTORY']
   s.rdoc_options << '--title' << 'Jabber::Bot Documentation' <<
-                    '--main' << 'README' <<
+                    '--main' << 'README.rdoc' <<
                     '--line-numbers'
 
   s.required_ruby_version = '>=1.8.4'

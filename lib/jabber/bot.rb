@@ -1,5 +1,5 @@
 #--
-# Copyright (c) 2007 Brett Stimmerman <brettstimmerman@gmail.com>
+# Copyright (c) 2009 Brett Stimmerman <brettstimmerman@gmail.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -31,22 +31,9 @@ require 'xmpp4r-simple'
 
 module Jabber
 
-  # = Jabber::Bot
-  #
-  # Jabber::Bot makes it simple to create and command a Jabber bot with little
-  # fuss. By adding custom commands powered by regular expressions to your bot's
-  # repertoire, you and your new bot will be able to accomplish nearly anything.
-  #
-  # Author::    Brett Stimmerman (mailto:brettstimmerman@gmail.com)
-  # Version::   1.1.0
-  # Copyright:: Copyright (c) 2007 Brett Stimmerman. All rights reserved.
-  # License::   New BSD License (http://opensource.org/licenses/bsd-license.php)
-  # Website::   http://socket7.net/software/jabber-bot
-  #
   class Bot
 
-    # Direct access to the underlying
-    # Jabber::Simple[http://xmpp4r-simple.rubyforge.org/] object.
+    # Direct access to the underlying Jabber::Simple object.
     attr_reader :jabber
 
     # Creates a new Jabber::Bot object with the specified +config+ Hash, which
@@ -71,7 +58,7 @@ module Jabber
     #   # A minimally confiugured private bot with a single master.
     #   bot = Jabber::Bot.new(
     #     :jabber_id => 'bot@example.com',
-    #     :password  => 'password',
+    #     :password  => 'secret',
     #     :master    => 'master@example.com'
     #   )
     #
@@ -82,7 +69,7 @@ module Jabber
     #   bot = Jabber::Bot.new(
     #     :name      => 'PublicBot',
     #     :jabber_id => 'bot@example.com',
-    #     :password  => 'password',
+    #     :password  => 'secret',
     #     :master    => masters,
     #     :is_public => true,
     #     :presence  => :chat,

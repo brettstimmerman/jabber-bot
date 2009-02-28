@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #--
-# Copyright (c) 2007 Brett Stimmerman <brettstimmerman@gmail.com>
+# Copyright (c) 2009 Brett Stimmerman <brettstimmerman@gmail.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,9 @@ require 'jabber/bot'
 
 # Configure a public bot
 config = {
-  :name      =? 'PublicBot',
+  :name      => 'PublicBot',
   :jabber_id => 'bot@example.com',
-  :password  => 'password',
+  :password  => 'secret',
   :master    => 'master@example.com',
   :is_public => true,
   :status    => 'Hello, I am PublicBot.',

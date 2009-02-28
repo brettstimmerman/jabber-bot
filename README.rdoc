@@ -1,30 +1,28 @@
 = Jabber::Bot
 
-Easily create powerful Jabber bots to do your bidding.
+Easily create simple regex powered Jabber bots.
 
-Jabber::Bot makes it simple to create and command your own Jabber bot with
-little fuss. By adding custom commands powered by regular expressions to your
-bot's repertoire, you and your new bot will be able to accomplish nearly
-anything.
+Jabber::Bot makes it simple to create and command your own Jabber bot. Bots
+are created by defining commands powered by regular expressions and Ruby.
 
-Author::    Brett Stimmerman (mailto:brettstimmerman@gmail.com)
-Version::   1.1.0
-Copyright:: Copyright (c) 2007 Brett Stimmerman. All rights reserved.
-License::   New BSD License (http://opensource.org/licenses/bsd-license.php)
-Website::   http://socket7.net/software/jabber-bot
+*Author*::    Brett Stimmerman (mailto:brettstimmerman@gmail.com)
+*Version*::   1.1.1
+*Copyright*:: Copyright (c) 2009 Brett Stimmerman. All rights reserved.
+*License*::   New BSD License (http://opensource.org/licenses/bsd-license.php)
+*Website*::   http://github.com/brettstimmerman/jabber-bot
 
-== Dependencies
+== Requires
 
-- Ruby[http://www.ruby-lang.org] 1.8.4+
-- xmpp4r-simple[http://xmpp4r-simple.rubyforge.org/] 0.8.7+
+* RubyGems
+* Jabber::Simple 0.8.7+
 
-== Basic Usage
+== Usage
 
-  # Create a public Jabber::Bot to do your bidding
+  # Create a public Jabber::Bot
   config = {
     :name      => 'SampleBot'
     :jabber_id => 'bot@example.com',
-    :password  => 'password',
+    :password  => 'secret',
     :master    => 'master@example.com',
     :is_public => true
   }

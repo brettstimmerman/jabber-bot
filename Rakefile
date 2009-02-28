@@ -1,5 +1,5 @@
 #--
-# Copyright (c) 2007 Brett Stimmerman <brettstimmerman@gmail.com>
+# Copyright (c) 2009 Brett Stimmerman <brettstimmerman@gmail.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -37,12 +37,13 @@ File.open(File.join(File.dirname(__FILE__), 'jabber-bot.gemspec')) do |f|
 end
 
 Rake::GemPackageTask.new(gemspec) do |pkg|
-  pkg.need_tar = true
+  pkg.need_tar = false
+  pkg.need_zip = false
 end
 
 Rake::RDocTask.new do |rd|
-  rd.main     = 'README'
+  rd.main     = 'README.rdoc'
   rd.title    = 'Jabber::Bot Documentation'
-  rd.rdoc_dir = 'doc/html'
-  rd.rdoc_files.include('README', 'lib/**/*.rb')
+  rd.rdoc_dir = 'doc'
+  rd.rdoc_files.include('README.rdoc', 'lib/**/*.rb')
 end
