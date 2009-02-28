@@ -1,5 +1,8 @@
 Jabber::Bot Release History
 
+Version 1.1.1 (26 May 2007)
+  * Minor change to the listener thread that should improve CPU usage.
+
 Version 1.1.0 (24 March 2007)
   * Supports Jabber presence, status message and priority.
   * Built-in 'help' command now accepts an optional <command> argument.
