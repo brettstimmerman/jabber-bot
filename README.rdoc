@@ -18,9 +18,12 @@ are created by defining commands powered by regular expressions and Ruby.
 
 == Usage
 
+  require 'rubygems'
+  require 'jabber/bot'
+
   # Create a public Jabber::Bot
   config = {
-    :name      => 'SampleBot'
+    :name      => 'SampleBot',
     :jabber_id => 'bot@example.com',
     :password  => 'secret',
     :master    => 'master@example.com',
@@ -44,7 +47,7 @@ are created by defining commands powered by regular expressions and Ruby.
     :alias       => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ],
     :is_public   => true
   ) do |sender, message|
-    puts "#{sender} says '#{message'"
+    puts "#{sender} says '#{message}'"
     "'#{message}' written to $stdout"
   end
 
