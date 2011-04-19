@@ -123,7 +123,7 @@ module Jabber
     # The specified callback block will be triggered when the bot receives a
     # message that matches the given command regex (or an alias regex). The
     # callback block will have access to the sender and the message text (not
-    # including the command itsef), and should either return a String response 
+    # including the command itsef), and should either return a String response
     # or +nil+. If a callback block returns a String response, the response will
     # be delivered to the Jabber id that issued the command.
     #
@@ -147,7 +147,7 @@ module Jabber
     #     :syntax      => 'puts! <string>',
     #     :description => 'Write something to $stdout (without response)',
     #     :regex       => /^puts!\s+.+$/,
-    #     :alias       => [ 
+    #     :alias       => [
     #       { :syntax => 'p! <string>', :regex => /^p!\s+.+$/ },
     #       { :syntax => '! <string>', :regex => /^!\s+/.+$/ }
     #     ]
