@@ -95,6 +95,7 @@ module Jabber
       # Default to asking about unknown commands.
       @config[:misunderstood_message] = @config[:misunderstood_message].nil? ? true : @config[:misunderstood_message]
 
+      # Add the help command
       add_command(
         :syntax      => 'help [<command>]',
         :description => 'Display help for the given command, or all commands' +
@@ -183,6 +184,8 @@ module Jabber
     end
 
     # Connect the bot, making it available to accept commands.
+    # You can specify a custom startup message with the ':startup_message'
+    # configuration setting.
     def connect
       @jabber = Jabber::Simple.new(@config[:jabber_id], @config[:password])
 
@@ -344,6 +347,10 @@ module Jabber
     # found, the command parameters are passed on to the callback block, minus
     # the command trigger. If a String result is present it is delivered to the
     # sender.
+    #
+    # If an unkown command is found, the bot will default to displaying the
+    # help message.  You can disable this by setting the configuration
+    # setting ':misunderstood_message' to false.
     #
     # If the bot has not been made public, commands from anyone other than the
     # bot master(s) will be silently ignored.
