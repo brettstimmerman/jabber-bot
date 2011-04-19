@@ -188,7 +188,7 @@ module Jabber
 
       presence(@config[:presence], @config[:status], @config[:priority])
 
-      deliver(@config[:master], "#{@config[:name]} reporting for duty.")
+      deliver(@config[:master], (@config[:startup_message] || "NAME reporting for duty.").gsub("NAME", @config[:name]))
 
       start_listener_thread
     end
