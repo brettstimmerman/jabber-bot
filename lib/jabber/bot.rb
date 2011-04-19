@@ -92,6 +92,9 @@ module Jabber
 
       @commands = { :spec => [], :meta => {} }
 
+      # Default to asking about unknown commands.
+      @config[:misunderstood_message] = @config[:misunderstood_message].nil? ? true : @config[:misunderstood_message]
+
       add_command(
         :syntax      => 'help [<command>]',
         :description => 'Display help for the given command, or all commands' +
@@ -359,15 +362,17 @@ module Jabber
 
               response = command[:callback].call(sender, params)
               deliver(sender, response) unless response.nil?
-              
+
               return
             end
           end
         end
 
-        response = "I don't understand '#{message.strip}' Try saying 'help' " +
-            "to see what commands I understand."
-        deliver(sender, response)
+        if @config[:misunderstood_message]
+          response = "I don't understand '#{message.strip}' Try saying 'help' " +
+              "to see what commands I understand."
+          deliver(sender, response)
+        end
       end
     end
 
