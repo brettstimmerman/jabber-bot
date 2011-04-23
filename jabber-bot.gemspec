@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version  = '1.2.0'
   s.author   = 'Brett Stimmerman'
   s.email    = 'brettstimmerman@gmail.com'
-  s.homepage = 'http://github/brettstimmerman/jabber-bot'
+  s.homepage = 'http://github.com/brettstimmerman/jabber-bot'
   s.platform = Gem::Platform::RUBY
   s.summary  = 'Easily create simple regex powered Jabber bots.'
 
