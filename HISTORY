@@ -1,5 +1,9 @@
 Jabber::Bot Release History
 
+Version 1.2.0 (23 April 2011)
+  * Optionally specify a startup message. (nstielau)
+  * Optionally disable the misunderstood command reply. (nstielau)
+
 Version 1.1.1 (26 May 2007)
   * Minor change to the listener thread that should improve CPU usage.
 
