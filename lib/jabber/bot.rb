@@ -113,6 +113,14 @@ module Jabber
     # the builtin 'help' command, and a regular expression (+regex+) to detect
     # the presence of the command in an incoming message.
     #
+    # The command parameter(s) will be parsed from group(s) (text between
+    # parenthesis) in the +regex+. If there's none, one, or more than one
+    # occurrence, the callback block will receive respectively nil, a String,
+    # or an Array.
+    # e.g. With a command defined like this: /^cmd\s+(.+)\s+(.+)\s+(.+)$/,
+    # writing "cmd foo bar 42" will send ["foo", "bar", "42"] to the callback
+    # block.
+    #
     # The metadata Hash may optionally contain an array of command aliases. An
     # +alias+ consists of an alias +syntax+ and +regex+. Aliases allow the bot
     # to understand command shorthands. For example, the default 'help' command
@@ -126,8 +134,8 @@ module Jabber
     #
     # The specified callback block will be triggered when the bot receives a
     # message that matches the given command regex (or an alias regex). The
-    # callback block will have access to the sender and the message text (not
-    # including the command itsef), and should either return a String response
+    # callback block will have access to the sender and the parameter(s) (not
+    # including the command itself), and should either return a String response
     # or +nil+. If a callback block returns a String response, the response will
     # be delivered to the Jabber id that issued the command.
     #
@@ -138,8 +146,8 @@ module Jabber
     #   add_command(
     #     :syntax      => 'puts <string>',
     #     :description => 'Write something to $stdout',
-    #     :regex       => /^puts\s+.+$/,
-    #     :alias       => [ :syntax => 'p <string>', :regex => /^p\s+.+$/ ]
+    #     :regex       => /^puts\s+(.+)$/,
+    #     :alias       => [ :syntax => 'p <string>', :regex => /^p\s+(.+)$/ ]
     #   ) do |sender, message|
     #     puts "#{sender} says #{message}."
     #     "'#{message}' written to $stdout."
@@ -150,10 +158,10 @@ module Jabber
     #   add_command(
     #     :syntax      => 'puts! <string>',
     #     :description => 'Write something to $stdout (without response)',
-    #     :regex       => /^puts!\s+.+$/,
-    #     :alias       => [
-    #       { :syntax => 'p! <string>', :regex => /^p!\s+.+$/ },
-    #       { :syntax => '! <string>', :regex => /^!\s+/.+$/ }
+    #     :regex       => /^puts!\s+(.+)$/,
+    #     :alias       => [ 
+    #       { :syntax => 'p! <string>', :regex => /^p!\s+(.+)$/ },
+    #       { :syntax => '! <string>', :regex => /^!\s+(.+)$/ }
     #     ]
     #   ) do |sender, message|
     #     puts "#{sender} says #{message}."
@@ -344,9 +352,11 @@ module Jabber
 
     # Parses the given command message for the presence of a known command by
     # testing it against each known command's regex. If a known command is
-    # found, the command parameters are passed on to the callback block, minus
-    # the command trigger. If a String result is present it is delivered to the
-    # sender.
+    # found, the command parameters are parsed from groups defined in the
+    # regex, if any. They are passed on to the callback block this way:
+    # nil if there's no parameter, a String if there's just one occurrence,
+    # or an Array if there's more than one occurence.
+    # If a String result is present it is delivered to the sender.
     #
     # If an unkown command is found, the bot will default to displaying the
     # help message.  You can disable this by setting the configuration
@@ -360,12 +370,10 @@ module Jabber
       if @config[:is_public] || is_master
         @commands[:spec].each do |command|
           if command[:is_public] || is_master
-            unless (message.strip =~ command[:regex]).nil?
-              params = nil
-
-              if message.include? ' '
-                params = message.sub(/^\S+\s+(.*)$/, '\1')
-              end
+            match = message.strip.match(command[:regex])
+            unless match.nil?
+              params = match.captures                     # Pass an array,
+              params = params.pop if params.count < 2     # a string, or nil.
 
               response = command[:callback].call(sender, params)
               deliver(sender, response) unless response.nil?

@@ -43,8 +43,8 @@ are created by defining commands powered by regular expressions and Ruby.
   bot.add_command(
     :syntax      => 'puts <string>',
     :description => 'Write something to $stdout',
-    :regex       => /^puts\s+.+$/,
-    :alias       => [ :alias => 'p <string>', :regex => /^p\s+.+$/ ],
+    :regex       => /^puts\s+(.+)$/,
+    :alias       => [ :alias => 'p <string>', :regex => /^p\s+(.+)$/ ],
     :is_public   => true
   ) do |sender, message|
     puts "#{sender} says '#{message}'"

@@ -50,7 +50,7 @@ bot = Jabber::Bot.new(config)
 bot.add_command(
   :syntax      => 'puts <string>',
   :description => 'Write something to $stdout',
-  :regex       => /^puts\s+.+$/
+  :regex       => /^puts\s+(.+)$/
 ) do |sender, message|
   puts "#{sender} says '#{message}'"
   "'#{message}' written to $stdout"
@@ -60,7 +60,7 @@ end
 bot.add_command(
   :syntax      => 'puts! <string>',
   :description => 'Write something to $stdout',
-  :regex       => /^puts!\s+.+$/
+  :regex       => /^puts!\s+(.+)$/
 ) do |sender, message|
   puts "#{sender} says '#{message}'"
   nil
