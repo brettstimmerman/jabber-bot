@@ -82,7 +82,7 @@ module Jabber
 
       @config[:is_public] ||= false
 
-      if @config[:name].nil? or @config[:name].length == 0
+      if @config[:name].nil? || @config[:name].length == 0
         @config[:name] = @config[:jabber_id].sub(/@.+$/, '')
       end
 
@@ -312,7 +312,7 @@ module Jabber
     # Commands are sorted alphabetically by name, and are displayed according
     # to the bot's and the commands's _public_ attribute.
     def help_message(sender, command_name) #:nodoc:
-      if command_name.nil? or command_name.length == 0
+      if command_name.nil? || command_name.length == 0
         # Display help for all commands
         help_message = "I understand the following commands:\n\n"
 
@@ -320,7 +320,7 @@ module Jabber
           # Thank you, Hash.sort
           command = command[1]
 
-          if !command[:is_alias] and (command[:is_public] or master? sender)
+          if !command[:is_alias] && (command[:is_public] || master? sender)
             command[:syntax].each { |syntax| help_message += "#{syntax}\n" }
             help_message += "  #{command[:description]}\n\n"
           end
@@ -357,9 +357,9 @@ module Jabber
     def parse_command(sender, message) #:nodoc:
       is_master = master? sender
 
-      if @config[:is_public] or is_master
+      if @config[:is_public] || is_master
         @commands[:spec].each do |command|
-          if command[:is_public] or is_master
+          if command[:is_public] || is_master
             unless (message.strip =~ command[:regex]).nil?
               params = nil
 
