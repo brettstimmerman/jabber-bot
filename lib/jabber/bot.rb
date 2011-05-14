@@ -328,7 +328,7 @@ module Jabber
           # Thank you, Hash.sort
           command = command[1]
 
-          if !command[:is_alias] && (command[:is_public] || master? sender)
+          if !command[:is_alias] && (command[:is_public] || master?(sender))
             command[:syntax].each { |syntax| help_message += "#{syntax}\n" }
             help_message += "  #{command[:description]}\n\n"
           end
