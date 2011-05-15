@@ -1,5 +1,8 @@
 Jabber::Bot Release History
 
+Version 1.3.0 (15 May 2011)
+  * Allow multiple parameters for bot commands. (v0n)
+
 Version 1.2.0 (23 April 2011)
   * Optionally specify a startup message. (nstielau)
   * Optionally disable the misunderstood command reply. (nstielau)

@@ -1,5 +1,5 @@
 #--
-# Copyright (c) 2009 Brett Stimmerman <brettstimmerman@gmail.com>
+# Copyright (c) 2011 Brett Stimmerman <brettstimmerman@gmail.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -354,23 +354,26 @@ module Jabber
     # testing it against each known command's regex. If a known command is
     # found, the command parameters are parsed from groups defined in the
     # regex, if any. They are passed on to the callback block this way:
-    # nil if there's no parameter, a String if there's just one occurrence,
+    # +nil+ if there's no parameter, a String if there's just one occurrence,
     # or an Array if there's more than one occurence.
-    # If a String result is present it is delivered to the sender.
+    # 
+    # If the callback returns a non- +nil+ value, it will be delivered to the
+    # sender.
     #
     # If an unkown command is found, the bot will default to displaying the
-    # help message.  You can disable this by setting the configuration
-    # setting ':misunderstood_message' to false.
+    # help message. You can disable this by setting +:misunderstood_message+
+    # to false in the bot configuration.
     #
     # If the bot has not been made public, commands from anyone other than the
     # bot master(s) will be silently ignored.
     def parse_command(sender, message) #:nodoc:
-      is_master = master? sender
+      is_master = master?(sender)
 
       if @config[:is_public] || is_master
         @commands[:spec].each do |command|
           if command[:is_public] || is_master
             match = message.strip.match(command[:regex])
+
             unless match.nil?
               params = match.captures                     # Pass an array,
               params = params.pop if params.count < 2     # a string, or nil.

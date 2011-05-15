@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = 'jabber-bot'
-  s.version  = '1.2.0'
+  s.version  = '1.3.0'
   s.author   = 'Brett Stimmerman'
   s.email    = 'brettstimmerman@gmail.com'
   s.homepage = 'http://github.com/brettstimmerman/jabber-bot'
