@@ -44,7 +44,7 @@ are created by defining commands powered by regular expressions and Ruby.
     :syntax      => 'puts <string>',
     :description => 'Write something to $stdout',
     :regex       => /^puts\s+(.+)$/,
-    :alias       => [ :alias => 'p <string>', :regex => /^p\s+(.+)$/ ],
+    :alias       => [ :syntax => 'p <string>', :regex => /^p\s+(.+)$/ ],
     :is_public   => true
   ) do |sender, message|
     puts "#{sender} says '#{message}'"
