@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Jabber::Bot by brettstimmerman</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/brettstimmerman/jabber-bot">Fork On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/brettstimmerman/jabber-bot/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/brettstimmerman/jabber-bot/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Jabber::Bot</h1>
+          <p>Easily create simple regex powered Jabber bots.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/brettstimmerman">brettstimmerman</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <div class="highlight">
+<pre>  <span class="nb">require</span> <span class="s1">'rubygems'</span>
+  <span class="nb">require</span> <span class="s1">'jabber/bot'</span>
+
+  <span class="c1"># Create a public Jabber::Bot</span>
+  <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="ss">:name</span>      <span class="o">=&gt;</span> <span class="s1">'SampleBot'</span><span class="p">,</span>
+    <span class="ss">:jabber_id</span> <span class="o">=&gt;</span> <span class="s1">'bot@example.com'</span><span class="p">,</span>
+    <span class="ss">:password</span>  <span class="o">=&gt;</span> <span class="s1">'secret'</span><span class="p">,</span>
+    <span class="ss">:master</span>    <span class="o">=&gt;</span> <span class="s1">'master@example.com'</span><span class="p">,</span>
+    <span class="ss">:is_public</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+  <span class="p">}</span>
+
+  <span class="n">bot</span> <span class="o">=</span> <span class="no">Jabber</span><span class="o">::</span><span class="no">Bot</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+  <span class="c1"># Give your bot a private command, 'rand'</span>
+  <span class="n">bot</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span>
+    <span class="ss">:syntax</span>      <span class="o">=&gt;</span> <span class="s1">'rand'</span><span class="p">,</span>
+    <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="s1">'Produce a random number from 0 to 10'</span><span class="p">,</span>
+    <span class="ss">:regex</span>       <span class="o">=&gt;</span> <span class="sr">/^rand$/</span>
+  <span class="p">)</span> <span class="p">{</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
+
+  <span class="c1"># Give your bot a public command, 'puts &lt;string&gt;' with an alias 'p &lt;string&gt;'</span>
+  <span class="n">bot</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span>
+    <span class="ss">:syntax</span>      <span class="o">=&gt;</span> <span class="s1">'puts &lt;string&gt;'</span><span class="p">,</span>
+    <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="s1">'Write something to $stdout'</span><span class="p">,</span>
+    <span class="ss">:regex</span>       <span class="o">=&gt;</span> <span class="sr">/^puts\s+(.+)$/</span><span class="p">,</span>
+    <span class="ss">:alias</span>       <span class="o">=&gt;</span> <span class="o">[</span> <span class="ss">:syntax</span> <span class="o">=&gt;</span> <span class="s1">'p &lt;string&gt;'</span><span class="p">,</span> <span class="ss">:regex</span> <span class="o">=&gt;</span> <span class="sr">/^p\s+(.+)$/</span> <span class="o">]</span><span class="p">,</span>
+    <span class="ss">:is_public</span>   <span class="o">=&gt;</span> <span class="kp">true</span>
+  <span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">sender</span><span class="p">,</span> <span class="n">message</span><span class="o">|</span>
+    <span class="nb">puts</span> <span class="s2">"</span><span class="si">#{</span><span class="n">sender</span><span class="si">}</span><span class="s2"> says '</span><span class="si">#{</span><span class="n">message</span><span class="si">}</span><span class="s2">'"</span>
+    <span class="s2">"'</span><span class="si">#{</span><span class="n">message</span><span class="si">}</span><span class="s2">' written to $stdout"</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Bring your new bot to life</span>
+  <span class="n">bot</span><span class="o">.</span><span class="n">connect</span>
+</pre>
+</div>
+
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
