@@ -100,7 +100,7 @@ module Jabber
         :syntax      => 'help [<command>]',
         :description => 'Display help for the given command, or all commands' +
             ' if no command is specified',
-        :regex => /^help(\s+?.+?)?$/,
+        :regex => /^help\s?(.+?)?$/,
         :alias => [ :syntax => '? [<command>]', :regex  => /^\?(\s+?.+?)?$/ ],
         :is_public => @config[:is_public]
       ) { |sender, message| help_message(sender, message) }
