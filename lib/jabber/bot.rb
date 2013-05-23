@@ -191,21 +191,6 @@ module Jabber
       end
     end
 
-    def add_command_invisible(command, &callback)
-      name = command_name(command[:syntax])
-
-      # Add the command meta - used in the 'help' command response.
-      # add_command_meta(name, command) !!Comented out because you do not want the command to show in help command response. SL
-
-      # Add the command spec - used for parsing incoming commands.
-      add_command_spec(command, callback)
-
-      # Add any command aliases to the command meta and spec // Because of this, we don't want to add aliases to invisible commands. SL
-      # unless command[:alias].nil?
-      #   command[:alias].each { |a| add_command_alias(name, a, callback) }
-      # end
-    end
-
     # Connect the bot, making it available to accept commands.
     # You can specify a custom startup message with the ':startup_message'
     # configuration setting.
